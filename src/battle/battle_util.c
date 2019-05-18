@@ -157,6 +157,8 @@ extern u8 BattleScript_SandstreamActivates[];
 extern u8 BattleScript_SnowWarningActivates[];
 extern u8 BattleScript_DroughtActivates[];
 extern u8 BattleScript_CastformChange[];
+extern u8 BattleScript_SlowStarted[];
+extern u8 BattleScript_SlowStartEnds[];
 extern u8 BattleScript_RainDishActivates[];
 extern u8 BattleScript_DrySkinDmg[];
 extern u8 BattleScript_IceBodyActivates[];
@@ -1855,6 +1857,15 @@ u8 AbilityBattleEffects(u8 caseID, u8 bank, u8 ability, u8 special, u16 moveArg)
                     gBattleStruct->castformToChangeInto = effect - 1;
                 }
                 break;
+            case ABILITY_SLOW_START:
+				if (!(gSpecialStatuses[bank].slowStarted))
+				{
+					gDisableStructs[bank].slowStartTimer = 0;
+					gSpecialStatuses[bank].slowStarted = 1;
+					BattleScriptPushCursorAndCallback(BattleScript_SlowStarted);
+                    effect++;
+				}
+				break;
             case ABILITY_TRACE:
                 if (!(gSpecialStatuses[bank].traced))
                 {
@@ -2012,6 +2023,18 @@ u8 AbilityBattleEffects(u8 caseID, u8 bank, u8 ability, u8 special, u16 moveArg)
                         effect++;
                     }
                     break;
+                case ABILITY_SLOW_START:
+					if (gSpecialStatuses[bank].slowStarted == 1)
+					{
+						if (gDisableStructs[bank].slowStartTimer == 5)
+						{
+							BattleScriptPushCursorAndCallback(BattleScript_SlowStartEnds);
+							gSpecialStatuses[bank].slowStarted = 0;
+						}
+						gDisableStructs[bank].slowStartTimer++;
+						effect++;
+					}
+					break;
                 case ABILITY_TRUANT:
                     gDisableStructs[gBankAttacker].truantCounter ^= 1;
                     break;
