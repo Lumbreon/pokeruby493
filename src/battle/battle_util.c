@@ -1858,12 +1858,9 @@ u8 AbilityBattleEffects(u8 caseID, u8 bank, u8 ability, u8 special, u16 moveArg)
                 }
                 break;
             case ABILITY_SLOW_START:
-				if (!(gSpecialStatuses[bank].slowStarted))
-				{
+                    gDisableStructs[bank].slowStartTimer = 5;
 					BattleScriptPushCursorAndCallback(BattleScript_SlowStarted);
-					gSpecialStatuses[bank].slowStarted = 1;
-				}
-				break; // TODO(?): Investigate why slowStarted is (apparently) being reset
+				break;
             case ABILITY_TRACE:
                 if (!(gSpecialStatuses[bank].traced))
                 {
@@ -1958,19 +1955,14 @@ u8 AbilityBattleEffects(u8 caseID, u8 bank, u8 ability, u8 special, u16 moveArg)
                     }
                     break;
                 case ABILITY_SLOW_START:
-					gSpecialStatuses[bank].slowStarted = 1;
-					if (gSpecialStatuses[bank].slowStarted == 1)
-					{
-						if (gDisableStructs[bank].slowStartTimer == 6)
-							break;						
-						if (gDisableStructs[bank].slowStartTimer <= 5)
-							gDisableStructs[bank].slowStartTimer++;
-						if (gDisableStructs[bank].slowStartTimer == 5)
-						{
+						if (gDisableStructs[bank].slowStartTimer != 0)
+                        {			
+							gDisableStructs[bank].slowStartTimer--;
+						if (gDisableStructs[bank].slowStartTimer == 0)
 							BattleScriptPushCursorAndCallback(BattleScript_SlowStartEnds);
-							gSpecialStatuses[bank].slowStarted = 0;
-						}
-						effect++;
+                            
+						    effect++;
+                        }
 					}
 					break;
 				case ABILITY_BAD_DREAMS:
