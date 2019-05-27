@@ -226,7 +226,7 @@ s32 CalculateBaseDamage(struct BattlePokemon *attacker, struct BattlePokemon *de
     if (defender->ability == ABILITY_DRY_SKIN && (gBattleMoves[gCurrentMove].type == TYPE_FIRE))
         gBattleMovePower = (125 * gBattleMovePower) / 100;
     // Slow Start
-    if (attacker->ability == ABILITY_SLOW_START && gDisableStruct[bankAtk].slowStartTimer != 0)
+    if (attacker->ability == ABILITY_SLOW_START && gDisableStructs[bankAtk].slowStartTimer != 0)
         attack /= 2;
 
 	// Rivalry
@@ -244,7 +244,9 @@ s32 CalculateBaseDamage(struct BattlePokemon *attacker, struct BattlePokemon *de
     if ((gBattleMoves[gCurrentMove].flags & F_MOVE_IS_SPECIAL) == 0)
     //if (TYPE_IS_PHYSICAL(type)) // type < TYPE_MYSTERY
     {
-        if (gCritMultiplier == 2)
+        if (defender->ability == ABILITY_UNAWARE)
+            damage = attack;
+        else if (gCritMultiplier == 2)
         {
             if (attacker->statStages[STAT_STAGE_ATK] > 6)
                 APPLY_STAT_MOD(damage, attacker, attack, STAT_STAGE_ATK)
@@ -257,7 +259,9 @@ s32 CalculateBaseDamage(struct BattlePokemon *attacker, struct BattlePokemon *de
         damage = damage * gBattleMovePower;
         damage *= (2 * attacker->level / 5 + 2);
 
-        if (gCritMultiplier == 2)
+        if (attacker->ability == ABILITY_UNAWARE)
+            damageHelper = defense;
+        else if (gCritMultiplier == 2)
         {
             if (defender->statStages[STAT_STAGE_DEF] < 6)
                 APPLY_STAT_MOD(damageHelper, defender, defense, STAT_STAGE_DEF)
@@ -295,7 +299,9 @@ s32 CalculateBaseDamage(struct BattlePokemon *attacker, struct BattlePokemon *de
     if ((gBattleMoves[gCurrentMove].flags & F_MOVE_IS_SPECIAL) != 0)
     //if (TYPE_IS_SPECIAL(type)) // type > TYPE_MYSTERY
     {
-        if (gCritMultiplier == 2)
+        if (defender->ability == ABILITY_UNAWARE)
+            damage = spAttack;
+        else if (gCritMultiplier == 2)
         {
             if (attacker->statStages[STAT_STAGE_SPATK] > 6)
                 APPLY_STAT_MOD(damage, attacker, spAttack, STAT_STAGE_SPATK)
@@ -308,7 +314,9 @@ s32 CalculateBaseDamage(struct BattlePokemon *attacker, struct BattlePokemon *de
         damage = damage * gBattleMovePower;
         damage *= (2 * attacker->level / 5 + 2);
 
-        if (gCritMultiplier == 2)
+        if (attacker->ability == ABILITY_UNAWARE)
+            damageHelper = spDefense;
+        else if (gCritMultiplier == 2)
         {
             if (defender->statStages[STAT_STAGE_SPDEF] < 6)
                 APPLY_STAT_MOD(damageHelper, defender, spDefense, STAT_STAGE_SPDEF)
