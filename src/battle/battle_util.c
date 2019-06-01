@@ -1,6 +1,7 @@
 #include "global.h"
 #include "battle.h"
 #include "battle_util.h"
+#include "battle_message.h"
 #include "data2.h"
 #include "event_data.h"
 #include "ewram.h"
@@ -153,6 +154,7 @@ extern u8 BattleScript_BideNoEnergyToAttack[];
 
 extern u8 BattleScript_OverworldWeatherStarts[]; //load weather from overworld
 extern u8 BattleScript_DrizzleActivates[];
+extern u8 BattleScript_FriskActivate[];
 extern u8 BattleScript_SandstreamActivates[];
 extern u8 BattleScript_SnowWarningActivates[];
 extern u8 BattleScript_DroughtActivates[];
@@ -1812,6 +1814,51 @@ u8 AbilityBattleEffects(u8 caseID, u8 bank, u8 ability, u8 special, u16 moveArg)
                     BattleScriptPushCursorAndCallback(BattleScript_DrizzleActivates);
                     gBattleStruct->scriptingActive = bank;
                     effect++;
+                }
+                break;
+            case ABILITY_FRISK:
+                if (gBattleMons[bank ^ 1].item != 0 || gBattleMons[bank ^ 3].item != 0)
+                {
+                    if (gBattleTypeFlags & BATTLE_TYPE_DOUBLE)
+                    {
+                        if (gBattleMons[bank ^ 1].item != 0 && gBattleMons[bank ^ 3].item != 0)
+                        {
+                            if (Random() % 1)
+                            {
+                            gLastUsedItem = gBattleMons[bank ^ 3].item;
+                            gBankAttacker = bank ^ 3;
+                            }
+                            else 
+                            {
+                            gLastUsedItem = gBattleMons[bank ^ 1].item;
+                            gBankAttacker = bank ^ 1;
+                            }
+                        }
+                        else if (gBattleMons[bank ^ 1].item != 0)
+                        {
+                            gLastUsedItem = gBattleMons[bank ^ 1].item;
+                            gBankAttacker = bank ^ 1;
+                        }
+                        else
+                        {
+                            gLastUsedItem = gBattleMons[bank ^ 3].item;
+                            gBankAttacker = bank ^ 3;
+                        }
+                    }
+                    else
+                    {
+                    gLastUsedItem = gBattleMons[bank ^ 1].item;
+                    gBankAttacker = bank ^ 1;
+                    }
+
+                    if (gLastUsedItem == 0)
+                        break;
+                    else
+                    {
+                        BattleScriptPushCursorAndCallback(BattleScript_FriskActivate);
+                        gBattleStruct->scriptingActive = bank;
+                        effect++;
+                    }
                 }
                 break;
             case ABILITY_SAND_STREAM:

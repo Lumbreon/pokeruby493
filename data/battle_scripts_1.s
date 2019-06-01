@@ -4020,6 +4020,12 @@ BattleScript_DrizzleActivates:: @ 81D9704
 	call BattleScript_WeatherFormChanges
 	end3
 
+BattleScript_FriskActivate:: @ 81D9704
+	pause 32
+	printstring BATTLE_TEXT_FriskDetected
+	waitmessage 64
+	end3
+
 BattleScript_SpeedBoostActivates:: @ 81D9718
 	playanimation USER, B_ANIM_STATS_CHANGE, sANIM_ARG1
 	printstring BATTLE_TEXT_SpeedRisen

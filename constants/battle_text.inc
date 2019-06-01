@@ -357,3 +357,4 @@
 	enum BATTLE_TEXT_BadDreamsDmg
 	enum BATTLE_TEXT_SlowStarted
 	enum BATTLE_TEXT_SlowStartEnds
+	enum BATTLE_TEXT_FriskDetected
