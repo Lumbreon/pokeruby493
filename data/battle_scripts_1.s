@@ -3994,6 +3994,7 @@ BattleScript_MoveEffectConfusion:: @ 81D96BA
 BattleScript_MoveEffectRecoil33:: @ 81D96C8
 	jumpifmove MOVE_STRUGGLE, BattleScript_DoRecoil33
 	jumpifability USER, ABILITY_ROCK_HEAD, BattleScript_Recoil33End
+	jumpifability USER, ABILITY_MAGIC_GUARD, BattleScript_Recoil33End
 
 BattleScript_DoRecoil33: @ 81D96DB
 	orword gHitMarker, HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_x100000
