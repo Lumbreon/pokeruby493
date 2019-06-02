@@ -2922,17 +2922,8 @@ u8 ItemBattleEffects(u8 caseID, u8 bank, bool8 moveTurn)
     }
 
     atkItem = gBattleMons[gBankAttacker].item;
-    if (atkItem == ITEM_ENIGMA_BERRY)
-    {
-        atkHoldEffect = gEnigmaBerries[gBankAttacker].holdEffect;
-        atkQuality = gEnigmaBerries[gBankAttacker].holdEffectParam;
-    }
-    else
-    {
-        atkHoldEffect = ItemId_GetHoldEffect(atkItem);
-        atkQuality = ItemId_GetHoldEffectParam(atkItem);
-    }
-
+        atkHoldEffect = GetBattlerHoldEffect(gBankAttacker, TRUE);
+        atkQuality = GetBattlerHoldEffectParam(gBankAttacker);
     // def variables are unused
     defItem = gBattleMons[gBankTarget].item;
     if (defItem == ITEM_ENIGMA_BERRY)
